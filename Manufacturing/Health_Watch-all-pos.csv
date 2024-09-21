@@ -1,0 +1,37 @@
+Designator,Val,Package,Mid X,Mid Y,Rotation,Layer
+C1,4u7,C_0603_1608Metric,103.6,-59.725,-90,top
+C2,100n,C_0402_1005Metric,103.1,-56.23,90,top
+C3,100n,C_0402_1005Metric,119.15,-57.02,-90,top
+C4,100n,C_0402_1005Metric,119.2,-49.72,-90,top
+C5,100n,C_0402_1005Metric,114.48,-61.85,180,top
+C6,100n,C_0402_1005Metric,106.05,-46.18,90,top
+C7,10u,C_0805_2012Metric,123.8,-47.95,-90,top
+C8,4u7,C_0603_1608Metric,130.825,-47.8,180,top
+C9,4u7,C_0603_1608Metric,133.975,-50.8,0,top
+C10,4u7,C_0603_1608Metric,134.85,-55.975,90,top
+C11,100n,C_0402_1005Metric,102.3,-63.98,90,top
+C12,20p,C_0402_1005Metric,108.65,-62.3,180,top
+C13,20p,C_0402_1005Metric,112.3,-65.35,180,top
+C14,10p,C_0402_1005Metric,104.05,-65.53,-90,top
+C15,10p,C_0402_1005Metric,106.1,-65.68,-90,top
+D1,D_Schottky,D_SOD-523,126.2,-47.7,90,top
+D2,TVS Diode,D_SOD-923,121.95,-48.72,90,top
+FM1,Fiducial,Fiducial_0.75mm_Mask1.5mm,135.4,-67.6,0,top
+FM2,Fiducial,Fiducial_0.75mm_Mask1.5mm,99.35,-67.6,0,top
+FM3,Fiducial,Fiducial_0.75mm_Mask1.5mm,98.8,-41.1,0,top
+J1,JST-PH-Conn,CONN_S2B-PH-K-S_JST,131.875,-44.95,180,top
+J2,USB_C_Receptacle_PowerOnly_6P,USB_C_Receptacle_GCT_USB4125-xx-x_6P_TopMnt_Horizontal,118.32,-41.6,180,top
+J4,Conn_01x11,01x10_Conn_Hole,126.05,-67.1,90,top
+R1,5k1,R_0402_1005Metric,127.35,-51.96,90,top
+R2,5k1,R_0402_1005Metric,112.1,-42.89,-90,top
+R3,5k1,R_0402_1005Metric,124.45,-42.84,-90,top
+R4,10k,R_0603_1608Metric,100.275,-54.5,0,top
+R5,4k7,R_0402_1005Metric,128.85,-58.24,-90,top
+R6,4k7,R_0402_1005Metric,127.4,-60.21,-90,top
+R7,10K,R_0603_1608Metric,116.725,-63.85,180,top
+R9,390R,R_0603_1608Metric,111.95,-63.35,90,top
+U1,MCP73831-2-OT,SOT-23-5,130.3375,-50.4,180,top
+U2,MIC5365-3.3YD5,SOT-23-5,132.15,-55.7125,-90,top
+U3,STM32L476RGTx,LQFP-64_10x10mm_P0.5mm,110.9,-53.45,90,top
+X1,Crystal_GND24,Crystal_SMD_3225-4Pin_3.2x2.5mm,109.15,-65.05,90,top
+X2,32KHz,Crystal_SMD_EuroQuartz_EQ161-2Pin_3.2x1.5mm,105.2,-63.05,0,top
