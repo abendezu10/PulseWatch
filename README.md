@@ -1,4 +1,4 @@
-# Health-Watch
+# PulseWatch
 A Smart Watch that uses the STM32L4
 
 ## Schematic
