@@ -18,6 +18,9 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "max30102_for_stm32_hal.h"
+
+#include <string.h>
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -40,6 +43,28 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+I2C_HandleTypeDef hi2c1;
+
+UART_HandleTypeDef huart2;
+
+// printf() function
+int __io_putchar(int ch)
+{
+  uint8_t temp = ch;
+  HAL_UART_Transmit(&huart2, &temp, 1, HAL_MAX_DELAY);
+  return ch;
+}
+
+// Override plot function
+void max30102_plot(uint32_t ir_sample, uint32_t red_sample)
+{
+    // printf("ir:%u\n", ir_sample);                  // Print IR only
+    // printf("r:%u\n", red_sample);                  // Print Red only
+    printf("ir:%u,r:%u\n", ir_sample, red_sample);    // Print IR and Red
+}
+
+// MAX30102 object
+max30102_t max30102;
 
 /* USER CODE BEGIN PV */
 
@@ -47,6 +72,9 @@
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+static void MX_I2C1_Init(void);
+static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -63,40 +91,72 @@ void SystemClock_Config(void);
 int main(void)
 {
 
-  /* USER CODE BEGIN 1 */
+	 /* USER CODE BEGIN 1 */
 
-  /* USER CODE END 1 */
+	  /* USER CODE END 1 */
 
-  /* MCU Configuration--------------------------------------------------------*/
+	  /* MCU Configuration--------------------------------------------------------*/
 
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+	  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+	  HAL_Init();
 
-  /* USER CODE BEGIN Init */
+	  /* USER CODE BEGIN Init */
 
-  /* USER CODE END Init */
+	  /* USER CODE END Init */
 
-  /* Configure the system clock */
-  SystemClock_Config();
+	  /* Configure the system clock */
+	  SystemClock_Config();
 
-  /* USER CODE BEGIN SysInit */
+	  /* USER CODE BEGIN SysInit */
 
-  /* USER CODE END SysInit */
+	  /* USER CODE END SysInit */
 
-  /* Initialize all configured peripherals */
-  /* USER CODE BEGIN 2 */
+	  /* Initialize all configured peripherals */
+	  MX_GPIO_Init();
+	  MX_I2C1_Init();
+	  MX_USART2_UART_Init();
+	  /* USER CODE BEGIN 2 */
+	  // Initiation
+	  max30102_init(&max30102, &hi2c1);
+	  max30102_reset(&max30102);
+	  max30102_clear_fifo(&max30102);
+	  max30102_set_fifo_config(&max30102, max30102_smp_ave_8, 1, 7);
 
-  /* USER CODE END 2 */
+	  // Sensor settings
+	  max30102_set_led_pulse_width(&max30102, max30102_pw_16_bit);
+	  max30102_set_adc_resolution(&max30102, max30102_adc_2048);
+	  max30102_set_sampling_rate(&max30102, max30102_sr_800);
+	  max30102_set_led_current_1(&max30102, 6.2);
+	  max30102_set_led_current_2(&max30102, 6.2);
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-    /* USER CODE END WHILE */
+	  // Enter SpO2 mode
+	  max30102_set_mode(&max30102, max30102_spo2);
+	  max30102_set_a_full(&max30102, 1);
 
-    /* USER CODE BEGIN 3 */
-  }
-  /* USER CODE END 3 */
+	  // Initiate 1 temperature measurement
+	  max30102_set_die_temp_en(&max30102, 1);
+	  max30102_set_die_temp_rdy(&max30102, 1);
+
+	  uint8_t en_reg[2] = {0};
+	  max30102_read(&max30102, 0x00, en_reg, 1);
+	  /* USER CODE END 2 */
+
+	  /* Infinite loop */
+	  /* USER CODE BEGIN WHILE */
+	  while (1)
+	  {
+
+
+
+	    if (max30102_has_interrupt(&max30102))
+	    {
+	      max30102_interrupt_handler(&max30102);
+	    }
+	    /* USER CODE END WHILE */
+
+	    /* USER CODE BEGIN 3 */
+	  }
+	  /* USER CODE END 3 */
 }
 
 /**
@@ -138,6 +198,108 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief I2C1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_I2C1_Init(void)
+{
+
+  /* USER CODE BEGIN I2C1_Init 0 */
+
+  /* USER CODE END I2C1_Init 0 */
+
+  /* USER CODE BEGIN I2C1_Init 1 */
+
+  /* USER CODE END I2C1_Init 1 */
+  hi2c1.Instance = I2C1;
+  hi2c1.Init.ClockSpeed = 100000;
+  hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c1.Init.OwnAddress1 = 0;
+  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c1.Init.OwnAddress2 = 0;
+  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C1_Init 2 */
+
+  /* USER CODE END I2C1_Init 2 */
+
+}
+
+/**
+  * @brief USART2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART2_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART2_Init 0 */
+
+  /* USER CODE END USART2_Init 0 */
+
+  /* USER CODE BEGIN USART2_Init 1 */
+
+  /* USER CODE END USART2_Init 1 */
+  huart2.Instance = USART2;
+  huart2.Init.BaudRate = 115200;
+  huart2.Init.WordLength = UART_WORDLENGTH_8B;
+  huart2.Init.StopBits = UART_STOPBITS_1;
+  huart2.Init.Parity = UART_PARITY_NONE;
+  huart2.Init.Mode = UART_MODE_TX_RX;
+  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART2_Init 2 */
+
+  /* USER CODE END USART2_Init 2 */
+
+}
+
+/**
+  * @brief GPIO Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_GPIO_Init(void)
+{
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+/* USER CODE BEGIN MX_GPIO_Init_1 */
+/* USER CODE END MX_GPIO_Init_1 */
+
+  /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : PA0 */
+  GPIO_InitStruct.Pin = GPIO_PIN_0;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PA1 */
+  GPIO_InitStruct.Pin = GPIO_PIN_1;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+/* USER CODE BEGIN MX_GPIO_Init_2 */
+/* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */

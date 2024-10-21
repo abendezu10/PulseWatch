@@ -20,6 +20,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f4xx_it.h"
+
+#include "max30102_for_stm32_hal.h"
+extern max30102_t max30102;
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
@@ -199,5 +202,15 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /* USER CODE BEGIN 1 */
+
+void EXTI0_IRQHandler(void)
+{
+    /* USER CODE BEGIN EXTI9_5_IRQn 0 */
+    max30102_on_interrupt(&max30102);
+    /* USER CODE END EXTI9_5_IRQn 0 */
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_9);
+    /* USER CODE BEGIN EXTI9_5_IRQn 1 */
+    /* USER CODE END EXTI9_5_IRQn 1 */
+}
 
 /* USER CODE END 1 */

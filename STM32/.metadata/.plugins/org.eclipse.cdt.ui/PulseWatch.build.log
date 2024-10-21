@@ -1,0 +1,42 @@
+14:24:43 **** Incremental Build of configuration Debug for project PulseWatch ****
+make -j7 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F401xE -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I"/Users/alexbendezu/Documents/Smart Watch/STM32/PulseWatch/Drivers/MyDrivers/MAX30102" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'max30102_plot':
+../Core/Src/main.c:63:5: warning: implicit declaration of function 'printf' [-Wimplicit-function-declaration]
+   63 |     printf("ir:%u,r:%u\n", ir_sample, red_sample);    // Print IR and Red
+      |     ^~~~~~
+../Core/Src/main.c:22:1: note: include '<stdio.h>' or provide a declaration of 'printf'
+   21 | #include "max30102_for_stm32_hal.h"
+  +++ |+#include <stdio.h>
+   22 | 
+../Core/Src/main.c:63:5: warning: incompatible implicit declaration of built-in function 'printf' [-Wbuiltin-declaration-mismatch]
+   63 |     printf("ir:%u,r:%u\n", ir_sample, red_sample);    // Print IR and Red
+      |     ^~~~~~
+../Core/Src/main.c:63:5: note: include '<stdio.h>' or provide a declaration of 'printf'
+../Core/Src/main.c:63:17: warning: format '%u' expects argument of type 'unsigned int', but argument 2 has type 'uint32_t' {aka 'long unsigned int'} [-Wformat=]
+   63 |     printf("ir:%u,r:%u\n", ir_sample, red_sample);    // Print IR and Red
+      |                ~^          ~~~~~~~~~
+      |                 |          |
+      |                 |          uint32_t {aka long unsigned int}
+      |                 unsigned int
+      |                %lu
+../Core/Src/main.c:63:22: warning: format '%u' expects argument of type 'unsigned int', but argument 3 has type 'uint32_t' {aka 'long unsigned int'} [-Wformat=]
+   63 |     printf("ir:%u,r:%u\n", ir_sample, red_sample);    // Print IR and Red
+      |                     ~^                ~~~~~~~~~~
+      |                      |                |
+      |                      unsigned int     uint32_t {aka long unsigned int}
+      |                     %lu
+arm-none-eabi-gcc -o "PulseWatch.elf" @"objects.list"   -mcpu=cortex-m4 -T"/Users/alexbendezu/Documents/Smart Watch/STM32/PulseWatch/STM32F401RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="PulseWatch.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: PulseWatch.elf
+ 
+arm-none-eabi-size  PulseWatch.elf 
+arm-none-eabi-objdump -h -S PulseWatch.elf  > "PulseWatch.list"
+   text	   data	    bss	    dec	    hex	filename
+  20440	    104	   2328	  22872	   5958	PulseWatch.elf
+Finished building: default.size.stdout
+ 
+Finished building: PulseWatch.list
+ 
+
+14:24:44 Build Finished. 0 errors, 4 warnings. (took 921ms)
+
